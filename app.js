@@ -88,9 +88,9 @@ function changeCanvasColor(event){
 function inputTextToCanvas(event){
     writeText = true;
         
-    }    
+}    
     
-}
+
 
 if(canvas){
     canvas.addEventListener("mousemove", onMouseMove);
