@@ -10,6 +10,8 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("controls_color");
 const strokeRange = document.querySelector("#jsRange");
 const changeCanvasBg = document.getElementById("jsCanvasBg");
+const inputText = document.getElementById("jsText")
+
 
 canvas.width = 800;
 canvas.height = 600;
@@ -21,6 +23,7 @@ ctx.lineWidth = 2.5;
 
 let painting = false;
 let fillcolor = false;
+let writeText = false;
 
 function stopPainting(){
     painting = false;
@@ -38,7 +41,7 @@ function onMouseMove(event){
         // console.log("creating path in ", x, y); path 가 생성되는걸 보려면 주석 해제
         ctx.beginPath();
         ctx.moveTo(x, y);
-    } else {
+    } else if(!writeText) { // text 입력모드인지 아닌지 체크
         ctx.lineTo(x, y);
         ctx.stroke();        
         /* ctrl+z로 라인 취소하는 기능 : newestLine 상수를 부여하고, 다시 keypress이벤트를 감지하게 하고, 다른 함수로 방금 그려진 라인을 삭제
@@ -82,11 +85,18 @@ function changeCanvasColor(event){
 }
 
 
+function inputTextToCanvas(event){
+    writeText = true;
+        
+    }    
+    
+}
+
 if(canvas){
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mousedown", startPainting);
     canvas.addEventListener("mouseup", stopPainting);
-    canvas.addEventListener("mouseleave", stopPainting);
+    canvas.addEventListener("mouseleave", stopPainting);    
 }
 
 if(strokeRange){
@@ -97,5 +107,16 @@ if(changeCanvasBg){
     changeCanvasBg.addEventListener("click", changeCanvasColor);
 }
 
+if(inputText){
+    inputText.addEventListener("click", inputTextToCanvas);
+}
 
 Array.from(colors).forEach(color => color.addEventListener("click", changeColor));
+
+
+/*
+text 입력을 가능하게 하려면
+1. text버튼을 누르면 커서가 바뀌고, painting 이 중단됨(writeText true)
+2. text를 쓸 위치를 누르면 input 창이 열림 (좌표를 상수로 지정)
+3. 인풋창에 text를 적고(text상수가 됨) 엔터를 누르면 ctx.filltext (텍스트 상수, 좌표상수)실행
+*/
